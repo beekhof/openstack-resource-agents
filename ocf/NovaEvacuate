@@ -103,6 +103,14 @@ Disable shared storage recovery for instances. Use at your own risk!
 <content type="boolean" default="0" />
 </parameter>
 
+<parameter name="verbose" unique="0" required="0">
+<longdesc lang="en">
+Enable extra logging from the evacuation process
+</longdesc>
+<shortdesc lang="en">Enable debug logging</shortdesc>
+<content type="boolean" default="0" />
+</parameter>
+
 </parameters>
 
 <actions>
@@ -296,6 +304,12 @@ evacuate_validate() {
 	if ocf_is_true "${OCF_RESKEY_no_shared_storage}"; then
 	    fence_options="${fence_options} --no-shared-storage"
 	fi
+    fi
+
+    if [ -n "${OCF_RESKEY_verbose}" ]; then
+        if ocf_is_true "${OCF_RESKEY_verbose}"; then
+            fence_options="${fence_options} --verbose"
+        fi
     fi
 
     if [ -n "${OCF_RESKEY_endpoint_type}" ]; then
