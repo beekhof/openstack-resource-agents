@@ -65,7 +65,23 @@ Password for connecting to keystone in admin context
 Tenant name for connecting to keystone in admin context.
 Note that with Keystone V3 tenant names are only unique within a domain.
 </longdesc>
-<shortdesc lang="en">Tenant name</shortdesc>
+<shortdesc lang="en">Keystone v2 Tenant or v3 Project Name</shortdesc>
+<content type="string" default="" />
+</parameter>
+
+<parameter name="user_domain" unique="0" required="1">
+<longdesc lang="en">
+User's domain name. Used when authenticating to Keystone.
+</longdesc>
+<shortdesc lang="en">Keystone v3 User Domain</shortdesc>
+<content type="string" default="" />
+</parameter>
+
+<parameter name="project_domain" unique="0" required="1">
+<longdesc lang="en">
+Domain name containing project. Used when authenticating to Keystone.
+</longdesc>
+<shortdesc lang="en">Keystone v3 Project Domain</shortdesc>
 <content type="string" default="" />
 </parameter>
 
@@ -288,6 +304,14 @@ evacuate_validate() {
     fi
 
     fence_options="${fence_options} -t ${OCF_RESKEY_tenant_name}"
+
+    if [ -n "${OCF_RESKEY_user_domain}" ]; then
+        fence_options="${fence_options} -u ${OCF_RESKEY_user_domain}"
+    fi
+
+    if [ -n "${OCF_RESKEY_project_domain}" ]; then
+        fence_options="${fence_options} -P ${OCF_RESKEY_project_domain}"
+    fi
 
     if [ -n "${OCF_RESKEY_region_name}" ]; then
         fence_options="${fence_options} \
